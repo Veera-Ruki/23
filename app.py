@@ -118,78 +118,18 @@ def image_caption(Image, target_language):
     translated_caption = translator.translate(generated_caption, target_language)
     return translated_caption
 
-def signup_interface(new_username, new_password, new_email):
-    
-    if not new_username or not new_password or not new_email:
-        return "All fields are required for signup."
-        
-    else:
-        role = "user"
-        try:
-            conn = sqlite3.connect("login.db")
-            cursor = conn.cursor()
-            cursor.execute("INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
-                           (new_username, new_password, new_email, role))
-            conn.commit()
-            return "Signup successful!"
-            
-        except sqlite3.IntegrityError:
-            return "Username already exists. Please choose a different one."
 
 
 
-def login_interface(username, password):
-    
-    if not username or not password:
-        return "Username and password are required for login." 
-    else:
-        try:
-            conn = sqlite3.connect("login.db")
-            cursor = conn.cursor()
-            cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
-            user = cursor.fetchone()
 
-            if user and user[2] == password:
-                num = 1
-                return "Login successful!"
-            else:
-                num = 0
-                return "Invalid username or password."
-        except sqlite3.OperationalError as e:
-            return f"An error occurred while trying to log in: {e}" 
-            
-def check(num):
-    
-    if num:
-        return gr.Group(visible=True) 
-    else:
-        return gr.Group(visible=False)
+
 
 with gr.Blocks() as main:
-    gr.Markdown("#Welcome to image caption generator")
-    gr.Markdown(
-    """
-    # IMAGE CAPTION GENERATOR!
-    Submit the image below to see the Caption.
-    """)
-    with gr.Tab("Signup"):
-        name = gr.Textbox(label="New Username", type="text")
-        pawd = gr.Textbox(label="New Password", type="password")
-        email = gr.Textbox(label="Email", type="text") 
-        button = gr.LoginButton(value="Sign up")
-        button.click(signup_interface,inputs=[name,pawd,email], outputs= gr.Textbox(label="response", type="text"))
-    with gr.Tab("Login"):
-        name = gr.Textbox(label="Username", type="text")
-        pawd = gr.Textbox(label="Password", type="password")
-        button = gr.LoginButton(value="Login")
-        button.click(login_interface,inputs=[name,pawd], outputs= gr.Textbox(label="response", type="text"))
-    with gr.Tab("Generator"):
-         with check(num):
-            gr.Markdown("Image Caption. Upload your own image or click any one of the examples, and click 'Submit' and then wait for the generated caption.")
-            inp=gr.Image(type='pil')
-            lang= gr.Dropdown(["en","ta","fr","es"], label="Target Language")
-            out=gr.Textbox(label="Caption")
-            button = gr.LoginButton(value="Generate caption")
+    gr.Markdown("Image Caption. Upload your own image or click any one of the examples, and click 'Submit' and then wait for the generated caption.")
+    inp=gr.Image(type='pil')
+    lang= gr.Dropdown(["en","ta","fr","es"], label="Target Language")
+    out=gr.Textbox(label="Caption")
+    button = gr.LoginButton(value="Generate caption")
 
 if __name__ == "__main__": 
     create_table()
