@@ -1,5 +1,6 @@
 import sqlite3
 import spacy
+import gradio as gr
 global num
 num = {}
 
