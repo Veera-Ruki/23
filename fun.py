@@ -65,5 +65,34 @@ def check(num):
     else:
         return gr.Group(visible=False)
 
+        
+def share(out, inp):
+    whatsapp_link = f"https://wa.me/?text={out}%20{inp}"
+    facebook_link = f"https://www.facebook.com/sharer/sharer.php?u={inp}&quote={out}"
+    instagram_link = f"https://www.instagram.com/?url={inp}&title={out}"
+    twitter_link = f"https://twitter.com/intent/tweet?text={out}%20{inp}"
+    button_label = "Share"
+    show_icons = False
+    def toggle_icons():
+        nonlocal show_icons, button_label
+        show_icons = not show_icons
+        
+
+    button = gr.Button(button_label)
+    button.click(toggle_icons)
+
+    if show_icons:
+        display_style = "flex"
+    else:
+        display_style = "none"
+
+    gr.HTML(f'<div id="iconsContainer" style="display: {display_style};">'
+        f'<a href="{whatsapp_link}" target="_blank"><img src="icons/wa.png" alt="WhatsApp"></a>'
+        f'<a href="{facebook_link}" target="_blank"><img src="icons/fb.png" alt="Facebook"></a>'
+        f'<a href="{instagram_link}" target="_blank"><img src="icons/in.png" alt="Instagram"></a>'
+        f'<a href="{twitter_link}" target="_blank"><img src="icons/tw.png" alt="Twitter"></a>'
+        '</div>')
+
+    
 
 
