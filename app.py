@@ -125,7 +125,11 @@ def image_caption(Image, target_language):
     return translated_caption
 
 with gr.Blocks() as main:
-    gr.Markdown("welcome to image caption generator")
+    gr.Markdown(
+     """
+    # Image Caption Generator!
+    Submit image to see the caption.
+    """)
     with gr.Tab("Signup"):
         name = gr.Textbox(label="New Username", type="text")
         pawd = gr.Textbox(label="New Password", type="password")
