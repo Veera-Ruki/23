@@ -13,12 +13,9 @@ from tasks.mm_tasks.caption import CaptionTask
 from models.ofa import OFAModel
 from PIL import Image
 from torchvision import transforms
+from fun import create_table,login_interface,signup_interface,check
 import gradio as gr
 from googletrans import Translator
-import sqlite3
-
-global num
-num = {}
 translator = Translator()
 
 # Register caption task
@@ -108,6 +105,15 @@ def apply_half(t):
 
 
 # Function for image captioning
+def image_caption(Image):
+    sample = construct_sample(Image)
+    sample = utils.move_to_cuda(sample) if use_cuda else sample
+    sample = utils.apply_to_sample(apply_half, sample) if use_fp16 else sample
+    with torch.no_grad():
+        result, scores = eval_step(task, generator, models, sample)
+    return result[0]['caption']
+
+
 def image_caption(Image, target_language):
     sample = construct_sample(Image)
     sample = utils.move_to_cuda(sample) if use_cuda else sample
@@ -118,20 +124,29 @@ def image_caption(Image, target_language):
     translated_caption = translator.translate(generated_caption, target_language)
     return translated_caption
 
-
-
-
-
-
-
 with gr.Blocks() as main:
-    gr.Markdown("Image Caption. Upload your own image or click any one of the examples, and click 'Submit' and then wait for the generated caption.")
-    inp=gr.Image(type='pil')
-    lang= gr.Dropdown(["en","ta","fr","es"], label="Target Language")
-    out=gr.Textbox(label="Caption")
-    button = gr.LoginButton(value="Generate caption")
-
-if __name__ == "__main__": 
+    gr.Markdown("welcome to image caption generator")
+    with gr.Tab("Signup"):
+        name = gr.Textbox(label="New Username", type="text")
+        pawd = gr.Textbox(label="New Password", type="password")
+        email = gr.Textbox(label="Email", type="text") 
+        button = gr.LoginButton(value="Sign up")
+        button.click(signup_interface,inputs=[name,pawd,email], outputs= gr.Textbox(label="response", type="text"))
+    with gr.Tab("Login"):
+        name = gr.Textbox(label="Username", type="text")
+        pawd = gr.Textbox(label="Password", type="password")
+        button = gr.LoginButton(value="Login")
+        button.click(login_interface,inputs=[name,pawd], outputs= gr.Textbox(label="response", type="text"))
+    with gr.Tab("Generator"):
+         with check(num):
+            gr.Markdown("Image Caption. Upload your own image or click any one of the examples, and click 'Submit' and then wait for the generated caption.")
+            inp=gr.Image(type='pil')
+            lang= gr.Dropdown(["en","ta","fr","es"], label="Target Language")
+            out=gr.Textbox(label="Caption")
+            button = gr.Button(value="Generate caption")
+            button.click(image_caption,inputs=[inp,lang], outputs=out)
+             
+if __name__ == "__main__":
     create_table()
     main.launch()
              
