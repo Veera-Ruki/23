@@ -1,7 +1,20 @@
 import sqlite3
+import spacy
 global num
 num = {}
 
+def generate_hashtags(out):
+    # Load the English NLP model
+    nlp = spacy.load("en_core_web_sm")
+    
+    # Process the input text using spaCy
+    doc = nlp(out)
+    
+    nouns = [token.text.lower() for token in doc if token.pos_ == "NOUN"]
+    verbs = [token.text.lower() for token in doc if token.pos_ == "VERB"]
+    hashtags = ['#' + word for word in nouns + verbs]
+    return hashtags
+    
 def create_table():
     with sqlite3.connect("login.db") as conn:
         cursor = conn.cursor()
