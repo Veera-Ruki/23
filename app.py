@@ -13,10 +13,12 @@ from tasks.mm_tasks.caption import CaptionTask
 from models.ofa import OFAModel
 from PIL import Image
 from torchvision import transforms
-from fun import create_table,login_interface,signup_interface,check,share
+from fun import create_table,login_interface,signup_interface,share
 import gradio as gr
 from googletrans import Translator
 translator = Translator()
+global num
+num = {}
 
 # Register caption task
 tasks.register_task('caption', CaptionTask)
@@ -124,6 +126,14 @@ def image_caption(Image, target_language):
     translated_caption = translator.translate(generated_caption, target_language)
     return translated_caption
 
+
+def check(num):
+    
+    if num:
+        return gr.Group(visible=True) 
+    else:
+        return gr.Group(visible=False)
+        
 with gr.Blocks() as main:
     gr.Markdown(
      """
