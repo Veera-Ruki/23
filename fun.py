@@ -58,12 +58,6 @@ def signup_interface(new_username, new_password, new_email):
 
          
 
-def check(num):
-    
-    if num:
-        return gr.Group(visible=True) 
-    else:
-        return gr.Group(visible=False)
 
         
 def share(out, inp):
