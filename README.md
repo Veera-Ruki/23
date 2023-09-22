@@ -6,6 +6,7 @@ colorTo: indigo
 sdk: gradio
 app_file: app.py
 pinned: false
+hf_oauth: true
 duplicated_from: Veera-Ruki/gradio-image-caption
 ---
 # Configuration
@@ -24,3 +25,4 @@ app.py
 
 `pinned`: _boolean_
 false
+'hf_oauth': true
