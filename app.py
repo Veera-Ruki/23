@@ -13,7 +13,7 @@ from tasks.mm_tasks.caption import CaptionTask
 from models.ofa import OFAModel
 from PIL import Image
 from torchvision import transforms
-from fun import create_table,login_interface,signup_interface,check
+from fun import create_table,login_interface,signup_interface,check,share
 import gradio as gr
 from googletrans import Translator
 translator = Translator()
@@ -145,6 +145,8 @@ with gr.Blocks() as main:
             out=gr.Textbox(label="Caption")
             button = gr.Button(value="Generate caption")
             button.click(image_caption,inputs=[inp,lang], outputs=out)
+            with gr.Accordion("Share"):
+                share(out,inp)
              
 if __name__ == "__main__":
     create_table()
